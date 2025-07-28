@@ -114,6 +114,13 @@ export default class ComplexControlComponent<T> extends ValueComponent<T> {
 	}
 
 	/**
+	 * Get current child that matches current value.
+	 */
+	public getCurrentChild(): ControlComponent | ComplexControlComponent<unknown> | undefined {
+		return this.childMap.get(this.getValue());
+	}
+
+	/**
 	 * Set a value to the parent element.
 	 */
 	public setValue(value: T): this {

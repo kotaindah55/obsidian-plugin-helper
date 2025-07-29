@@ -1,2 +1,2 @@
-export * from './dom/animation'
-export * from './dom/event'
+export * from './src/dom/animation'
+export * from './src/dom/event'

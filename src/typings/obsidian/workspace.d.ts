@@ -1,7 +1,6 @@
 import 'obsidian';
 import type { Workspace } from 'obsidian';
 import type { Extension } from '@codemirror/state';
-import type PluginBase from '../obsidian/plugin-base';
 
 declare module 'obsidian' {
 	interface DeferredLeaf extends WorkspaceLeaf {
@@ -23,8 +22,8 @@ declare module 'obsidian' {
 		 */
 		on(name: 'editor-selection-change', callback: (editor: Editor, info: MarkdownFileInfo) => unknown, ctx?: unknown): EventRef;
 		on(name: 'leaf-menu', callback: (menu: Menu, leaf: WorkspaceLeaf) => unknown, ctx?: unknown): EventRef;
-		on(name: 'plugin-helper:plugin-base-unload', callback: (plugin: PluginBase<object>) => unknown, ctx?: unknown): EventRef;
 		on(name: 'tab-group-menu', callback: (menu: Menu, tab: WorkspaceTabs) => unknown, ctx?: unknown): EventRef;
+		on(name: string, callback: (...args: unknown[]) => unknown, ctx?: unknown): EventRef;
 		onDragLeaf(evt: DragEvent, leaf: WorkspaceLeaf): void;
 		registerEditorExtension(extension: Extension): void;
 		unregisterEditorExtension(extension: Extension): void;

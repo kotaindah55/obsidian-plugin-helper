@@ -29,9 +29,9 @@ export default class UndeferHandler extends Component {
 			return;
 		}
 
-		this.app.workspace.on('plugin-helper:plugin-base-unload', plugin => {
-			if (plugin !== this.plugin) return;
-			this.detach();
+		this.app.workspace.on(`${this.plugin.manifest.id}:plugin-unload`, plugin => {
+			if (plugin instanceof Plugin && plugin == this.plugin)
+				this.detach();
 		});
 	}
 

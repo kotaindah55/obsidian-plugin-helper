@@ -26,7 +26,7 @@ export default abstract class PluginBase<T extends object> extends Plugin {
 
 	public unload(): void {
 		super.unload();
-		this.app.workspace.trigger('plugin-helper:plugin-base-unload', this);
+		this.app.workspace.trigger(`${this.manifest.id}:plugin-unload`, this);
 	}
 
 	public registerEditorSuggest(editorSuggest: EditorSuggest<any>, noCollision?: boolean): void {

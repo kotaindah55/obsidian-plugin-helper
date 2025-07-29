@@ -39,6 +39,16 @@ export abstract class PluginBase<T extends object> extends Plugin {
 		}
 	}
 
+	/**
+	 * Register callback that will be called once a view has been undeferred.
+	 */
+	public registerUndeferCallback(callback: (leaf: WorkspaceLeaf) => unknown): void {
+		this.app.workspace.iterateAllLeaves(leaf => {
+			if (!leaf.isDeferred) return;
+			this.runWhenUndeferred(leaf, callback);
+		});
+	}
+
 	public runWhenUndeferred(leaf: WorkspaceLeaf, callback: (leaf: WorkspaceLeaf) => unknown): void {
 		new UndeferHandler(leaf, callback, this);
 	}

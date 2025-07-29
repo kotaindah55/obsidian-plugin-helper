@@ -13,23 +13,23 @@ declare global {
 		prototype: T;
 	}
 
-	type ClassType<T extends Instance> = T['constructor'];
-
-	interface Instance<T = this, Args extends unknown[] = any[]> {
-		constructor: Class<T, Args>;
-	}
+	type ClassType<T extends Instance<unknown>> = T['constructor'];
 
 	interface HTMLElement {
 		addEventListeners<K extends keyof HTMLElementEventMap>(listenerRecord: {
 			[Key in K]?: (this: this, evt: HTMLElementEventMap[K]) => unknown
 		}): void;
 	}
+
+	interface Instance<T, Args extends unknown[] = any[]> {
+		constructor: Class<T, Args>;
+	}
 	
 	interface Window {
 		electronWindow: BaseWindow;
 	}
 
-	declare namespace NodeJS {
+	namespace NodeJS {
 		interface Require {
 			(id: 'font-list'): typeof FontList;
 		}

@@ -1,5 +1,4 @@
 import 'obsidian';
-import type { Workspace } from 'obsidian';
 import type { Extension } from '@codemirror/state';
 
 declare module 'obsidian' {
@@ -34,10 +33,17 @@ declare module 'obsidian' {
 	}
 
 	interface WorkspaceLeaf {
-		app: App;
-		rebuildView(): Promise<void>;
 		_empty: EmptyView;
 		_originView: View;
+		app: App;
+		tabHeaderEl: HTMLElement;
+		tabHeaderInnerIconEl: HTMLElement;
+		workspace: Workspace;
+		isVisible(): boolean;
+		on(name: 'history-change', callback: () => unknown, ctx?: unknown): EventRef;
+		onOpenTabHeaderMenu(evt: MouseEvent, tabHeaderEl: HTMLElement): void;
+		rebuildView(): Promise<void>;
+		updateHeader(): void;
 	}
 
 	interface WorkspaceMobileDrawer {

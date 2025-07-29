@@ -7,6 +7,7 @@ declare module 'obsidian' {
 	class WebviewerDBStore {
 		db: IDBDatabase;
 		getHistoryItems(): Promise<WebviewerHistoryItem[]>;
+		setIcon(el: HTMLElement, url: string, source?: string): Promise<void>;
 	}
 
 	interface WebviewerHistoryItem {

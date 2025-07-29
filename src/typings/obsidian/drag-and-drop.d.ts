@@ -19,7 +19,7 @@ declare module 'obsidian' {
 		| DraggableLink;
 
 	interface DraggableBookmark extends AbstractDraggable<'bookmark'> {
-		items: BookmarkItem[];
+		items: Array<BookmarkTreeItem | BookmarkGroupTreeItem>;
 	}
 
 	interface DraggableFile extends AbstractDraggable<'file'> {
@@ -31,7 +31,7 @@ declare module 'obsidian' {
 	}
 
 	interface DraggableFolder extends AbstractDraggable<'folder'> {
-		file?: TFolder;
+		folder?: TFolder;
 	}
 
 	interface DraggableLink extends AbstractDraggable<'link'> {

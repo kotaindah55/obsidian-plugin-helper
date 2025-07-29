@@ -4,7 +4,7 @@ declare module 'obsidian' {
 	/**
 	 * @typeonly
 	 */
-	class InternalPlugin<T extends InternalPluginID> extends Component {
+	class InternalPlugin<T extends InternalPluginIDs> extends Component {
 		instance: InternalPluginInstanceMap[T];
 		views: { [V in InternalPluginViewTypes<T>]: TypedViewCreator<ViewTypeMap[V]> };
 	}
@@ -25,15 +25,15 @@ declare module 'obsidian' {
 	 */
 	class InternalPluginManager extends Events {
 		plugins: {
-			[ID in keyof InternalPluginInstanceMap]: InternalPlugin<InternalPluginInstanceMap[ID]>;
+			[ID in InternalPluginIDs]: InternalPlugin<ID>;
 		};
-		getPluginById<T extends IntenalPluginIDs>(id: T): InternalPlugin<InternalPluginInstanceMap[T]>;
-		getEnabledPluginById<T extends IntenalPluginIDs>(id: T): InternalPluginInstanceMap[T] | null;
+		getPluginById<T extends InternalPluginIDs>(id: T): InternalPlugin<T>;
+		getEnabledPluginById<T extends InternalPluginIDs>(id: T): InternalPluginInstanceMap[T] | null;
 	}
 
-	type IntenalPluginIDs = keyof InternalPluginInstanceMap;
+	type InternalPluginIDs = keyof InternalPluginInstanceMap;
 
-	type InternalPluginViewTypes<T extends InternalPluginID> = InternalPluginViewTypesMap[T];
+	type InternalPluginViewTypes<T extends InternalPluginIDs> = InternalPluginViewTypesMap[T];
 
 	interface InternalPluginViewTypesMap {
 		'bookmarks': 'bookmarks';

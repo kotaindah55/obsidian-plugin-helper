@@ -48,7 +48,7 @@ declare module 'obsidian' {
 	}
 
 	interface BookmarkItemGroup extends AbstractBookmarkItem<'group'> {
-		items: [];
+		items: BookmarkItem[];
 	}
 
 	interface BookmarkItemSearch extends AbstractBookmarkItem<'search'> {
@@ -78,6 +78,8 @@ declare module 'obsidian' {
 	 * @typeonly
 	 */
 	class BookmarksView extends ItemView {
+		getViewType(): string;
+		getDisplayText(): string;
 		itemDoms: WeakMap<BookmarkItem, BookmarkTreeItem | BookmarkGroupTreeItem>;
 		plugin: BookmarksPluginInstance;
 		tree: BookmarksVirtualTree;

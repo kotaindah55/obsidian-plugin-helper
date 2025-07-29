@@ -118,6 +118,7 @@ declare module 'obsidian' {
 		displayError(message: string, item: FileTreeItem | FolderTreeItem): void;
 		dragFiles(evt: DragEvent, item: FileTreeItem | FolderTreeItem): DraggableFiles | null;
 		exitRename(): void;
+		getDisplayText(): string;
 		getNodeId(item: FileTreeItem | FolderTreeItem): string;
 		/**
 		 * Get sorted items of the given folder.

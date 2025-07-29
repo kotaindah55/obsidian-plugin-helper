@@ -109,7 +109,7 @@ class ILine extends Line {
  * Cursor implementation for {@link Text}, returning current line and its
  * address as the result.
  */
-export default class TextCursor {
+export class TextCursor {
 	public address: LineAddress;
 	public curLine: Line;
 	public doc: Text;

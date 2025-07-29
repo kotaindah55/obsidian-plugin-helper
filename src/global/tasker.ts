@@ -23,7 +23,7 @@ export class TaskerState {
 	}
 }
 
-export default class Tasker {
+export class Tasker {
 	private pending: Promise<unknown> | null;
 	private queued: number;
 	private refs: Set<TaskRef>;

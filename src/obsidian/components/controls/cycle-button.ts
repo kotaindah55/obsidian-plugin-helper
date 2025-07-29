@@ -7,7 +7,7 @@ export interface TooltipSpec {
 	options?: TooltipOptions;
 }
 
-export default class CycleButtonComponent extends ValueComponent<CycleValue> {
+export class CycleButtonComponent extends ValueComponent<CycleValue> {
 	public readonly cycleButtonEl: HTMLElement;
 
 	private readonly button: ExtraButtonComponent;

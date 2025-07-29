@@ -1,5 +1,5 @@
 import { type EventRef, Events } from 'obsidian';
-import PluginBase from '../plugin-base';
+import type { PluginBase } from '../plugin-base';
 
 /**
  * Act like an event loop for settings change.
@@ -51,4 +51,4 @@ class SettingManager<T extends PluginBase<object>> extends Events {
 	}
 }
 
-export default SettingManager;
+export { SettingManager };

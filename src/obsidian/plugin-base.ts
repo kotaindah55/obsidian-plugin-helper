@@ -1,9 +1,9 @@
 import { type App, Plugin, type Debouncer, type PluginManifest, debounce, type WorkspaceLeaf, type EditorSuggest } from 'obsidian';
 import { createEditorSuggestService } from './components/suggest/editor-suggest';
-import SettingManager from './settings/setting-manager';
-import UndeferHandler from './workspace/undefer-handler';
+import { SettingManager } from './settings/setting-manager';
+import { UndeferHandler } from './workspace/undefer-handler';
 
-export default abstract class PluginBase<T extends object> extends Plugin {
+export abstract class PluginBase<T extends object> extends Plugin {
 	public settings: T;
 	public settingManager: SettingManager<this>;
 	public requestSave: Debouncer<[], unknown>;

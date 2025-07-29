@@ -1,8 +1,8 @@
 import { PluginSettingTab } from 'obsidian';
-import SettingEx from './setting-ex';
-import SortableList from '../sortable-list';
+import { SettingEx } from './setting-ex';
+import { SortableList } from '../sortable-list';
 
-export default abstract class SettingTabEx extends PluginSettingTab {
+export abstract class SettingTabEx extends PluginSettingTab {
 	protected registeredSettings: Record<string, SettingEx>;
 
 	/**

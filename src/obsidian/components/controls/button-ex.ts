@@ -3,7 +3,7 @@ import { ButtonComponent } from 'obsidian';
 /**
  * Button component with some extra functionality.
  */
-export default class ButtonExComponent extends ButtonComponent {
+export class ButtonExComponent extends ButtonComponent {
 	/**
 	 * Toggle cta style on and off.
 	 */

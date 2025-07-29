@@ -1,6 +1,6 @@
 import { App, Component, type EventRef, Modal } from 'obsidian';
 
-export default class EventTargetModal extends Modal {
+export class EventTargetModal extends Modal {
 	public readonly registrar: Component;
 
 	public get isOpen(): boolean {

@@ -1,6 +1,6 @@
 import { displayTooltip, type TooltipPlacement } from 'obsidian';
 import { detachTooltip, getTooltipEl } from '../tooltip';
-import SuggestTextComponent from './suggest-text';
+import { SuggestTextComponent } from './suggest-text';
 
 /**
  * Fuction that validates given value, may return a promise.
@@ -10,7 +10,7 @@ type ValidatorFn = (value: string) => boolean | Promise<boolean>;
 /**
  * Text component that can validate value each input change.
  */
-export default class ValidationTextComponent extends SuggestTextComponent {
+export class ValidationTextComponent extends SuggestTextComponent {
 	/**
 	 * Currently active validator.
 	 */

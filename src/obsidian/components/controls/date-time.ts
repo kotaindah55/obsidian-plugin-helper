@@ -1,6 +1,6 @@
 import { ValueComponent } from 'obsidian';
 
-export default class DateTimeComponent extends ValueComponent<number> {
+export class DateTimeComponent extends ValueComponent<number> {
 	public dateTimeInputEl: HTMLInputElement;
 
 	constructor(containerEl: HTMLElement) {

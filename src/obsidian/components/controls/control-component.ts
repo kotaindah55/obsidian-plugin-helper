@@ -11,11 +11,11 @@ import type {
 	TextComponent,
 	ToggleComponent
 } from 'obsidian';
-import type ValidationTextComponent from './validation-text';
-import type CycleButtonComponent from './cycle-button';
-import type DateTimeComponent from './date-time';
-import type SuggestTextComponent from './suggest-text';
-import type ButtonExComponent from './button-ex';
+import type { ValidationTextComponent } from './validation-text';
+import type { CycleButtonComponent } from './cycle-button';
+import type { DateTimeComponent } from './date-time';
+import type { SuggestTextComponent } from './suggest-text';
+import type { ButtonExComponent } from './button-ex';
 
 export type ControlComponent =
 	| ButtonComponent

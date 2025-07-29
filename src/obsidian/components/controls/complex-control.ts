@@ -15,11 +15,11 @@ import {
 	ValueComponent
 } from 'obsidian';
 import type { ControlComponent } from './control-component';
-import CycleButtonComponent from './cycle-button';
-import DateTimeComponent from './date-time';
-import ValidationTextComponent from './validation-text';
-import SuggestTextComponent from './suggest-text';
-import ButtonExComponent from './button-ex';
+import { CycleButtonComponent } from './cycle-button';
+import { DateTimeComponent } from './date-time';
+import { ValidationTextComponent } from './validation-text';
+import { SuggestTextComponent } from './suggest-text';
+import { ButtonExComponent } from './button-ex';
 
 interface DynamicComponent<T> extends ValueComponent<T> {
 	onChange(callback: (value: T) => unknown): this;
@@ -80,7 +80,7 @@ function getControlComponentEl(component: BaseComponent): HTMLElement | null {
  * Component that can have multiple child control components, whose the
  * parent control can switch between them via its value.
  */
-export default class ComplexControlComponent<T> extends ValueComponent<T> {
+export class ComplexControlComponent<T> extends ValueComponent<T> {
 	/**
 	 * Primary element of this component. Must be a {@link DynamicComponent | `DynamicComponent`}
 	 * in order to be able to switch between the children.

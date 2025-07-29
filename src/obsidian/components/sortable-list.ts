@@ -11,7 +11,7 @@ interface SortableListState {
 /**
  * Container of draggable and sortable setting list.
  */
-export default class SortableList extends BaseComponent {
+export class SortableList extends BaseComponent {
 	public containerEl: HTMLElement;
 	public listEl: HTMLElement;
 	public readonly settings: Setting[];

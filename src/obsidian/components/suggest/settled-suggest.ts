@@ -1,7 +1,7 @@
 import { AbstractInputSuggest, App, EditorSuggest, type Instruction } from 'obsidian';
 import { cancelAnimations, playAnimation } from '../../../dom/animation';
 
-export default abstract class SettledSuggest<T> extends AbstractInputSuggest<T> {
+export abstract class SettledSuggest<T> extends AbstractInputSuggest<T> {
 	protected containerEl: HTMLElement;
 	protected instructionsEl: HTMLElement;
 

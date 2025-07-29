@@ -1,7 +1,7 @@
-import { type App, Component, type View, type WorkspaceLeaf } from 'obsidian';
-import type PluginBase from '../plugin-base';
+import { type App, Component, Plugin, type View, type WorkspaceLeaf } from 'obsidian';
+import type { PluginBase } from '../plugin-base';
 
-export default class UndeferHandler extends Component {
+export class UndeferHandler extends Component {
 	public app: App;
 	public leaf: WorkspaceLeaf;
 	public view: View;

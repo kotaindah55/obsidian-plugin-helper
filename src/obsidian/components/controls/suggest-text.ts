@@ -5,7 +5,7 @@ type SuggestConstructor = (inputEl: HTMLInputElement | HTMLDivElement) => Abstra
 /**
  * Text component that provides suggest.
  */
-export default class SuggestTextComponent extends TextComponent {
+export class SuggestTextComponent extends TextComponent {
 	/**
 	 * Currently attached suggest.
 	 */

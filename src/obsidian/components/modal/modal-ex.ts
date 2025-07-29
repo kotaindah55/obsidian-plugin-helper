@@ -1,8 +1,8 @@
 import type { App } from 'obsidian';
-import EventTargetModal from './event-target-modal';
-import ButtonExComponent from '../controls/button-ex';
-import SettingEx from '../setting/setting-ex';
-import SortableList from '../sortable-list';
+import { EventTargetModal } from './event-target-modal';
+import { ButtonExComponent } from '../controls/button-ex';
+import { SettingEx } from '../setting/setting-ex';
+import { SortableList } from '../sortable-list';
 
 interface ModalButtonOption {
 	asNav?: boolean;

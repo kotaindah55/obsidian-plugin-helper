@@ -1,12 +1,12 @@
 import { Setting } from 'obsidian';
-import ValidationTextComponent from '../controls/validation-text';
-import ComplexControlComponent from '../controls/complex-control';
-import CycleButtonComponent from '../controls/cycle-button';
-import DateTimeComponent from '../controls/date-time';
-import SuggestTextComponent from '../controls/suggest-text';
-import ButtonExComponent from '../controls/button-ex';
+import { ValidationTextComponent } from '../controls/validation-text';
+import { ComplexControlComponent } from '../controls/complex-control';
+import { CycleButtonComponent } from '../controls/cycle-button';
+import { DateTimeComponent } from '../controls/date-time';
+import { SuggestTextComponent } from '../controls/suggest-text';
+import { ButtonExComponent } from '../controls/button-ex';
 
-export default class SettingEx extends Setting {
+export class SettingEx extends Setting {
 	private hidePlaceholder: Comment;
 
 	constructor(containerEl: HTMLElement) {

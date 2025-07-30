@@ -74,6 +74,14 @@ declare module 'obsidian' {
 		saveData(): void;
 	}
 
+	type BookmarkType =
+		| 'file'
+		| 'folder'
+		| 'graph'
+		| 'group'
+		| 'search'
+		| 'url';
+
 	/**
 	 * @typeonly
 	 */

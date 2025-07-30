@@ -40,6 +40,7 @@ export class SortableList extends BaseComponent {
 
 	/**
 	 * Add a {@link Setting} component to the sortable list.
+	 * 
 	 * @param constructor {@link Setting} class or its derivatives.
 	 * @param args {@link constructor | Constructor} arguments.
 	 */
@@ -104,21 +105,33 @@ export class SortableList extends BaseComponent {
 		return this;
 	}
 
+	/**
+	 * Register callback called after adding a setting.
+	 */
 	public onAdd(callback: (setting: Setting) => unknown): this {
 		this.addCallback = callback;
 		return this;
 	}
 
+	/**
+	 * Register callback called after removing a setting.
+	 */
 	public onRemove(callback: (setting: Setting) => unknown): this {
 		this.removeCallback = callback;
 		return this;
 	}
 
+	/**
+	 * Register callback called after moving a setting by dragging.
+	 */
 	public onMove(callback: (setting: Setting, newIndex: number, oldIndex: number) => unknown): this {
 		this.moveCallback = callback;
 		return this;
 	}
 
+	/**
+	 * Register callback called after end of dragging.
+	 */
 	public onEnd(callback: (setting: Setting, newIndex: number, oldIndex: number) => unknown): this {
 		this.endCallback = callback;
 		return this;
@@ -146,6 +159,7 @@ export class SortableList extends BaseComponent {
 	 * Clear all listed settings.
 	 */
 	public clear(): this {
+		this.settings.forEach(setting => this.removeCallback?.(setting));
 		this.listEl.empty();
 		this.settings.splice(0);
 		return this;

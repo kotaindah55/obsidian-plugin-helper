@@ -15,7 +15,7 @@ export class CycleButtonComponent extends ValueComponent<CycleValue> {
 	private options: Map<CycleValue, string>;
 	private order: CycleValue[];
 	private index: number;
-	private tooltipCallback?: (value: CycleValue) => TooltipSpec | null;
+	private tooltipCallback?: (value: CycleValue) => TooltipSpec | string | null;
 
 	constructor(containerEl: HTMLElement) {
 		super();
@@ -75,7 +75,7 @@ export class CycleButtonComponent extends ValueComponent<CycleValue> {
 		return this;
 	}
 
-	public setDynamicTooltip(callback: (value: CycleValue) => TooltipSpec | null) {
+	public setDynamicTooltip(callback: (value: CycleValue) => TooltipSpec | string | null) {
 		this.tooltipCallback = callback;
 		return this.displayDynamicTooltip();
 	}
@@ -91,7 +91,13 @@ export class CycleButtonComponent extends ValueComponent<CycleValue> {
 
 	private displayDynamicTooltip(): this {
 		let spec = this.tooltipCallback?.(this.getValue());
-		if (spec) this.setTooltip(spec.tooltip, spec.options);
+		if (!spec) return this;
+
+		if (typeof spec == 'string') spec = {
+			tooltip: spec
+		};
+
+		this.setTooltip(spec.tooltip, spec.options);
 		return this;
 	}
 

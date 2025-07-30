@@ -9,9 +9,9 @@ interface ModalButtonOption {
 	secondary?: boolean;
 }
 
-export default class ModalEx extends EventTargetModal {
-	public readonly buttonContainerEl: HTMLElement;
-	public readonly buttons: ButtonExComponent[];
+export class ModalEx extends EventTargetModal {
+	public buttonContainerEl: HTMLElement;
+	public buttons: ButtonExComponent[];
 
 	public navButton: ButtonExComponent | null;
 	public navButtonSecondary: ButtonExComponent | null;

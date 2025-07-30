@@ -74,7 +74,7 @@ export class SortableList extends BaseComponent {
 			handle?.addEventListener('touchmove', evt => {
 				evt.preventDefault();
 				let touch = evt.touches[0];
-				this.handleDragStart({ x: touch.clientX, y: touch.clientY }, setting)
+				this.handleDragMove({ x: touch.clientX, y: touch.clientY }, setting)
 			}, { signal: this.aborter.signal });
 			handle?.addEventListener('touchend', () => this.handleDragEnd(setting), {
 				signal: this.aborter.signal

@@ -95,7 +95,7 @@ declare module 'obsidian' {
 	/**
 	 * @typeonly
 	 */
-	class VirtualChildren<Owner extends ParentVirtualItem, Item extends VirtualItem> {
+	class VirtualChildren<Owner extends ParentVirtualItem<Item>, Item extends VirtualItem> {
 		owner: Owner;
 		_children: Item[];
 		get children(): Item[];
@@ -149,7 +149,7 @@ declare module 'obsidian' {
 		selectedDoms: Set<Item>;
 		view: View;
 		get root(): this['infinityScroll']['rootEl'];
-		constructor(view: View, spec: VirtualTreeSpec);
+		constructor(view: View, spec: VirtualTreeSpec<Item>);
 		changeFocusedItem(direction: 'forwards' | 'backwards'): void;
 		clearSelectedDoms(): void;
 		deselectItem(item: Item): void;
@@ -174,7 +174,7 @@ declare module 'obsidian' {
 		toggleCollapseAll(): void;
 	}
 
-	interface VirtualTreeSpec {
+	interface VirtualTreeSpec<Item extends VirtualItem> {
 		app: App;
 		containerEl: HTMLElement;
 		getNodeId: (item: Item) => string;

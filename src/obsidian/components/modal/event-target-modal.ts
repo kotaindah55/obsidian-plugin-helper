@@ -2,23 +2,23 @@ import { App, Component, type EventRef, Modal } from 'obsidian';
 
 export class EventTargetModal extends Modal {
 	public readonly registrar: Component;
-
-	public get isOpen(): boolean {
-		return !!this.modalEl.parentElement;
-	}
+	public isOpen: boolean;
 
 	constructor(app: App) {
 		super(app);
 		this.registrar = new Component();
+		this.isOpen = false;
 	}
 
 	public open(): void {
 		super.open();
+		this.isOpen = true;
 		this.registrar.load();
 	}
 
 	public close(): void {
 		super.close();
+		this.isOpen = false;
 		this.registrar.unload();
 	}
 

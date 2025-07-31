@@ -64,7 +64,8 @@ export class CycleButtonComponent extends ValueComponent<CycleValue> {
 
 	public cycle(trigger = true): this {
 		let lastIndex = Math.max(0, this.order.length - 1);
-		this.index = Math.min(lastIndex, this.index + 1);
+		if (this.index >= lastIndex) this.index = 0;
+		else this.index++;
 		if (trigger) this.changeCallback?.(this.getValue());
 		return this.display();
 	}

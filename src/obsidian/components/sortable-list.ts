@@ -39,6 +39,14 @@ export class SortableList extends BaseComponent {
 	}
 
 	/**
+	 * Set CSS class to the list.
+	 */
+	public setClass(...classes: string[]): this {
+		this.listEl.addClasses(classes);
+		return this;
+	}
+
+	/**
 	 * Add a {@link Setting} component to the sortable list.
 	 * 
 	 * @param constructor {@link Setting} class or its derivatives.

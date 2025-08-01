@@ -29,10 +29,10 @@ export class UndeferHandler extends Component {
 			return;
 		}
 
-		this.app.workspace.on(`${this.plugin.manifest.id}:plugin-unload`, plugin => {
+		this.registerEvent(this.app.workspace.on(`${this.plugin.manifest.id}:plugin-unload`, plugin => {
 			if (plugin instanceof Plugin && plugin == this.plugin)
 				this.detach();
-		});
+		}));
 	}
 
 	public onunload(): void {

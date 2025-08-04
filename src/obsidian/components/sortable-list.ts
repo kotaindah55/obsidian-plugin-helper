@@ -1,4 +1,4 @@
-import { BaseComponent, Setting } from 'obsidian';
+import { BaseComponent, ExtraButtonComponent, Setting } from 'obsidian';
 
 interface Coords { x: number; y: number }
 
@@ -15,6 +15,7 @@ export class SortableList extends BaseComponent {
 	public containerEl: HTMLElement;
 	public listEl: HTMLElement;
 	public readonly settings: Setting[];
+	public readonly handles: Map<Setting, ExtraButtonComponent>;
 
 	private aborter: AbortController;
 	private ghostEl: HTMLElement | null;
@@ -34,6 +35,7 @@ export class SortableList extends BaseComponent {
 		this.containerEl = containerEl;
 		this.listEl = this.containerEl.createDiv({ cls: 'sortable-list' });
 		this.settings = [];
+		this.handles = new Map();
 		this.ghostEl = null;
 		this.aborter = new AbortController();
 	}
@@ -57,15 +59,19 @@ export class SortableList extends BaseComponent {
 		args: ConstructorParameters<C>,
 		callback?: (setting: T, list: this) => unknown
 	): this {
-		let handle: HTMLElement | undefined,
+		let handle: ExtraButtonComponent | undefined,
 			setting = new constructor(...args).addExtraButton(btn => btn
 				.setIcon('lucide-menu')
 				.setTooltip('Drag to rearrange')
-				.then(btn => handle = btn.extraSettingsEl)
+				.then(btn => handle = btn)
 			);
 
+		let handleEl = handle?.extraSettingsEl;
+
 		// Drag & drop (mouse)
-		handle?.addEventListener('mousedown', evt => {
+		handleEl?.addEventListener('mousedown', evt => {
+			if (this.disabled) return;
+
 			this.handleDragStart(evt, setting);
 			this.bodyEl.doc.addEventListener('mousemove', evt => this.handleDragMove(evt, setting), {
 				signal: this.aborter.signal
@@ -76,22 +82,26 @@ export class SortableList extends BaseComponent {
 		});
 
 		// Drag & drop (multi-touch)
-		handle?.addEventListener('touchstart', evt => {
+		handleEl?.addEventListener('touchstart', evt => {
+			if (this.disabled) return;
+
 			evt.preventDefault();
 			let touch = evt.touches[0];
 			this.handleDragStart({ x: touch.clientX, y: touch.clientY }, setting);
-			handle?.addEventListener('touchmove', evt => {
+			handleEl?.addEventListener('touchmove', evt => {
 				evt.preventDefault();
 				let touch = evt.touches[0];
 				this.handleDragMove({ x: touch.clientX, y: touch.clientY }, setting)
 			}, { signal: this.aborter.signal });
-			handle?.addEventListener('touchend', () => this.handleDragEnd(setting), {
+			handleEl?.addEventListener('touchend', () => this.handleDragEnd(setting), {
 				signal: this.aborter.signal
 			});
-			handle?.addEventListener('touchcancel', () => this.handleDragEnd(setting), {
+			handleEl?.addEventListener('touchcancel', () => this.handleDragEnd(setting), {
 				signal: this.aborter.signal
 			});
 		});
+
+		if (handle) this.handles.set(setting, handle);
 
 		this.settings.push(setting);
 		this.addCallback?.(setting);
@@ -105,9 +115,19 @@ export class SortableList extends BaseComponent {
 	public removeSetting(setting: Setting): this {
 		if (!this.settings.contains(setting)) return this;
 
+		let handle = this.handles.get(setting);
+		this.handles.delete(setting);
 		this.settings.remove(setting);
+
 		// Detaching its element from the DOM.
 		setting.settingEl.detach();
+
+		// Removing drag handle
+		if (handle) {
+			setting.components.remove(handle);
+			handle.extraSettingsEl.detach();
+		}
+
 		this.removeCallback?.(setting);
 
 		return this;
@@ -167,9 +187,21 @@ export class SortableList extends BaseComponent {
 	 * Clear all listed settings.
 	 */
 	public clear(): this {
-		this.settings.forEach(setting => this.removeCallback?.(setting));
+		this.settings.forEach(setting => {
+			let handle = this.handles.get(setting);
+
+			// Removing drag handle
+			if (handle) {
+				setting.components.remove(handle);
+				handle.extraSettingsEl.detach();
+			}
+
+			this.removeCallback?.(setting);
+		});
+
 		this.listEl.empty();
 		this.settings.splice(0);
+		this.handles.clear();
 		return this;
 	}
 

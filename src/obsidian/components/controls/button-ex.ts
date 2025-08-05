@@ -7,8 +7,8 @@ export class ButtonExComponent extends ButtonComponent {
 	/**
 	 * Toggle cta style on and off.
 	 */
-	public toggleCta(on: boolean): this {
-		this.setNormal();
+	public toggleCta(on: boolean, reset?: boolean): this {
+		if (reset) this.setNormal();
 		this.buttonEl.toggleClass('mod-cta', on);
 		return this;
 	}
@@ -16,8 +16,8 @@ export class ButtonExComponent extends ButtonComponent {
 	/**
 	 * Toggle warning style on and off.
 	 */
-	public toggleWarning(on: boolean): this {
-		this.setNormal();
+	public toggleWarning(on: boolean, reset?: boolean): this {
+		if (reset) this.setNormal();
 		this.buttonEl.toggleClass('mod-warning', on);
 		return this;
 	}
@@ -25,8 +25,8 @@ export class ButtonExComponent extends ButtonComponent {
 	/**
 	 * Toggle destructive style on and off.
 	 */
-	public toggleDestrcutive(on: boolean): this {
-		this.setNormal();
+	public toggleDestrcutive(on: boolean, reset?: boolean): this {
+		if (reset) this.setNormal();
 		this.buttonEl.toggleClass('mod-destructive', on);
 		return this;
 	}
@@ -34,8 +34,8 @@ export class ButtonExComponent extends ButtonComponent {
 	/**
 	 * Toggle muted style on and off.
 	 */
-	public toggleMuted(on: boolean): this {
-		this.setNormal();
+	public toggleMuted(on: boolean, reset?: boolean): this {
+		if (reset) this.setNormal();
 		this.buttonEl.toggleClass('mod-muted', on);
 		return this;
 	}
@@ -43,8 +43,8 @@ export class ButtonExComponent extends ButtonComponent {
 	/**
 	 * Toggle cancel style on and off. The effect is seen in phone only.
 	 */
-	public toggleCancel(on: boolean): this {
-		this.setNormal();
+	public toggleCancel(on: boolean, reset?: boolean): this {
+		if (reset) this.setNormal();
 		this.buttonEl.toggleClass('mod-cancel', on);
 		return this;
 	}

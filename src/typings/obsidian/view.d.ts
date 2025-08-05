@@ -4,12 +4,16 @@ declare module 'obsidian' {
 	/**
 	 * @typeonly
 	 */
-	class DeferredView extends View {}
+	class DeferredView extends View {
+		getDisplayText(): string;
+		getViewType(): string;
+}
 
 	/**
 	 * @typeonly
 	 */
 	class EmptyView extends ItemView {
+		getDisplayText(): string;
 		getViewType(): 'empty';
 	}
 
@@ -34,6 +38,7 @@ declare module 'obsidian' {
 		'empty': EmptyView;
 		'file-properties': FilePropertiesView;
 		'file-explorer': FileExplorerView;
+		'search': GlobalSearchView;
 		'tag': TagView;
 	}
 }

@@ -14,6 +14,7 @@ declare module 'obsidian' {
 	interface InternalPluginInstanceMap {
 		'bookmarks': BookmarksPluginInstance;
 		'file-explorer': FileExplorerPluginInstance;
+		'global-search': GlobalSearchPluginInstance;
 		'properties': PropertiesPluginInstance;
 		'switcher': QuickSwitcherPluginInstance;
 		'tag-pane': TagPanePluginInstance;
@@ -38,6 +39,7 @@ declare module 'obsidian' {
 	interface InternalPluginViewTypesMap {
 		'bookmarks': 'bookmarks';
 		'file-explorer': 'file-explorer';
+		'global-search': 'search';
 		'properties': 'all-properties' | 'file-properties';
 		'switcher': never;
 		'tag-pane': 'tag';

@@ -28,13 +28,20 @@ declare module 'obsidian' {
 	/**
 	 * @typeonly
 	 */
-	class GlobalSearchResultTreeItem implements ParentVirtualItem<FileMatchTreeItem> {
+	class GlobalSearchResultTreeItem implements ParentVirtualItem<FileMatchTreeItem>, Partial<CollapsibleTreeItem> {
 		childrenEl: HTMLElement;
+		collapsed: boolean;
+		collapseEl: HTMLElement | null;
+		collapsible: boolean;
 		el: HTMLElement;
+		file: TFile;
 		info: VirtualItemInfo;
 		onRender?: (() => void) | undefined;
 		pusherEl: HTMLElement;
 		vChildren: VirtualChildren<this, FileMatchTreeItem>;
+		onCollapseClick(evt: MouseEvent): void;
+		setCollapsed(collapse: boolean, animate?: boolean): Promise<void> | void;
+		setCollapsible(collapsible: boolean): void;
 	}
 
 	/**

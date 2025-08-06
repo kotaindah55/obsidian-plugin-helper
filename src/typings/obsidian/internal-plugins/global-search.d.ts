@@ -61,6 +61,7 @@ declare module 'obsidian' {
 	 * @typeonly
 	 */
 	class GlobalSearchView extends View {
+		dom: GlobalSearchTreeRoot;
 		getDisplayText(): string;
 		getViewType(): 'search';
 	}

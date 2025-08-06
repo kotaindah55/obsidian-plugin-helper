@@ -31,7 +31,7 @@ declare module 'obsidian' {
 	}
 
 	interface DraggableFolder extends AbstractDraggable<'folder'> {
-		folder?: TFolder;
+		file?: TFolder;
 	}
 
 	interface DraggableLink extends AbstractDraggable<'link'> {

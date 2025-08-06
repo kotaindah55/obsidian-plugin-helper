@@ -7,6 +7,7 @@ declare module 'obsidian' {
 		 * Main CodeMirror's `EditorView` instance of the editor.
 		 */
 		cm: EditorView;
+		editorComponent: MarkdownEditView;
 		/**
 		 * Currently active `EditorView` in the editor, either belongs to the
 		 * main editor directly or to the table cell.

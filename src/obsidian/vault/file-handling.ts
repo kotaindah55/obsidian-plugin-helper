@@ -81,3 +81,37 @@ export async function iterateAbstractFilesAsync(app: App, cb: (file: TAbstractFi
 		}
 	}
 }
+
+/**
+ * Get all child folders of the given parent folder.
+ */
+export function getAllChildFolders(parent: TFolder): TFolder[] {
+	let childFolders: TFolder[] = [],
+		childrenList = [parent.children];
+
+	for (let i = 0; i < childrenList.length; i++) {
+		let children = childrenList[i];
+		for (let i = 0; i < children.length; i++) {
+			let child = children[i];
+			if (child instanceof TFolder) {
+				childFolders.push(child);
+				childrenList.push(child.children);
+			}
+		}
+	}
+
+	return childFolders;
+}
+
+/**
+ * Get all ancestor folders of the given file.
+ */
+export function getAllAncestors(file: TAbstractFile): TFolder[] {
+	let ancestors: TFolder[] = [];
+	
+	for (let parent = file.parent; parent; parent = parent.parent) {
+		ancestors.push(parent);
+	}
+
+	return ancestors;
+}

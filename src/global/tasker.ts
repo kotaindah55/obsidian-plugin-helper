@@ -1,135 +1,102 @@
-export interface TaskRef {
+type TaskOperation = (state: Readonly<TaskerState>) => Promise<unknown> | unknown;
+
+interface TaskRef {
 	readonly id: string;
-	label?: string;
+	readonly delay: number;
+	readonly label?: string;
 }
 
-export class TaskerState {
-	public mustCancel: boolean;
-	public pauseState: Promise<void>;
-	public running?: TaskRef;
-
-	public readonly cancelledRef: Set<TaskRef>;
-	public get mustCancelCurrent(): boolean {
-		return (
-			this.mustCancel ||
-			this.running !== undefined && this.cancelledRef.has(this.running)
-		);
-	}
-
-	constructor(cancelledRef: Set<TaskRef>) {
-		this.mustCancel = false;
-		this.cancelledRef = cancelledRef;
-		this.pauseState = Promise.resolve();
-	}
+export interface TaskerState {
+	cancelCurrent: boolean;
 }
 
 export class Tasker {
-	private pending: Promise<unknown> | null;
-	private queued: number;
-	private refs: Set<TaskRef>;
-	private cancelledRefs: Set<TaskRef>;
-	private labeledRefs: Record<string, TaskRef[]>;
-	private resumer?: () => void;
-
 	private readonly state: TaskerState;
+	private readonly queue: { ref: TaskRef, op: TaskOperation }[];
+	
+	private current: TaskRef | null;
+	private running: boolean;
 
 	constructor() {
-		this.pending = null;
-		this.queued = 0;
-		this.refs = new Set();
-		this.cancelledRefs = new Set();
-		this.labeledRefs = {};
-		this.state = new TaskerState(this.cancelledRefs);
+		this.state = { cancelCurrent: false };
+		this.queue = [];
+		this.current = null;
+		this.running = false;
 	}
 
-	public queue(
-		operation: (state: TaskerState) => Promise<unknown>,
-		delay = 5,
-		label?: string
-	): TaskRef | undefined {
-		let prevTask = this.pending,
-			ref: TaskRef = { id: Date.now().toString(36), label };
+	public enqueue(operation: TaskOperation, delay: number = 5, label?: string): TaskRef {
+		let ref: TaskRef = {
+			id: Date.now().toString(36),
+			delay,
+			label
+		};
 
-		this.pushRef(ref);
-		this.queued++;
-		this.pending = (async () => {
-			await prevTask;
-			await this.state.pauseState;
-			this.queued--;
-
-			run_task: if (!this.state.mustCancel && !this.cancelledRefs.has(ref)) {
-				await sleep(delay);
-				if (this.state.mustCancel || this.cancelledRefs.has(ref))
-					break run_task;
-				this.state.running = ref;
-				await this.state.pauseState;
-				await operation(this.state);
-			}
-
-			this.state.running = undefined;
-			this.removeRef(ref);
-
-			if (this.queued <= 0) this.reset();
-		})();
+		this.queue.push({ ref, op: operation });
+		this.run();
 
 		return ref;
 	}
 
 	public cancel(): void {
-		if (!this.pending) return;
-		this.state.mustCancel = true;
-	}
+		if (!this.running) return;
 
-	public cancelRef(ref: TaskRef): void {
-		if (!this.refs.has(ref)) return;
-		this.cancelledRefs.add(ref);
+		let currIdx = this.getCurrIdx();
+		if (currIdx >= 0) this.queue.splice(currIdx + 1);
+
+		this.state.cancelCurrent = true;
 	}
 
 	public cancelLabel(label: string): void {
-		let ref: TaskRef | undefined,
-			refs = this.labeledRefs[label];
-		while (ref = refs?.shift()) {
-			delete ref.label;
-			this.cancelRef(ref);
+		if (!this.running) return;
+		
+		let currIdx = this.getCurrIdx(),
+			idxs: number[] = [];
+
+		this.queue.forEach((item, idx) => {
+			if (idx < currIdx || item.ref.label !== label) return;
+			if (idx === currIdx) this.state.cancelCurrent = true;
+			else idxs.push(idx);
+		});
+
+		for (let i = idxs.length - 1; i >= 0; i--)
+			this.queue.splice(idxs[i], 1);
+	}
+
+	public cancelRef(ref: TaskRef): void {
+		if (!this.running) return;
+		
+		let currIdx = this.getCurrIdx(),
+			targetIdx = this.queue.findIndex(item => item.ref === ref);
+
+		if (targetIdx < 0 || targetIdx < currIdx) return;
+		if (targetIdx === currIdx) this.state.cancelCurrent = true;
+		else this.queue.splice(targetIdx, 1);
+	}
+
+	private getCurrIdx(): number {
+		return this.current
+			? this.queue.findIndex(item => item.ref == this.current)
+			: -1;
+	}
+
+	private async run(): Promise<void> {
+		if (this.running) return;
+		this.running = true;
+
+		for (let i = 0; i < this.queue.length; i++) {
+			let { ref, op } = this.queue[i];
+			this.current = ref;
+
+			if (ref.delay > 0) await sleep(ref.delay);
+
+			let opReturn = op(this.state);
+			if (opReturn instanceof Promise) await opReturn;
+
+			this.state.cancelCurrent = false;
+			this.current = null;
 		}
-		delete this.labeledRefs[label];
-	}
 
-	public pause(): void {
-		if (!this.resumer) return;
-		this.state.pauseState = new Promise(
-			resolve => this.resumer = resolve
-		);
-	}
-
-	public resume(): void {
-		this.resumer?.();
-		delete this.resumer;
-	}
-
-	private reset(): void {
-		this.pending = null;
-		this.state.mustCancel = false;
-	}
-
-	private pushRef(ref: TaskRef): void {
-		this.refs.add(ref);
-		let { label } = ref;
-		if (label) {
-			this.labeledRefs[label] ??= [];
-			this.labeledRefs[label].push(ref);
-		}
-	}
-
-	private removeRef(ref: TaskRef): void {
-		this.refs.delete(ref);
-		this.cancelledRefs.delete(ref);
-		let { label } = ref;
-		if (label) {
-			this.labeledRefs[label]?.remove(ref);
-			if (this.labeledRefs[label]?.length === 0) {
-				delete this.labeledRefs[label];
-			}
-		}
+		this.queue.splice(0);
+		this.running = false;
 	}
 }

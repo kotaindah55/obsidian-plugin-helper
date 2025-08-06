@@ -1,4 +1,6 @@
 import '@codemirror/search';
+import { RegExpCursor, SearchCursor } from '@codemirror/search';
+import { EditorState } from '@codemirror/state';
 
 declare module '@codemirror/search' {
 	/**

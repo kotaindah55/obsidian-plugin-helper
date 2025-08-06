@@ -18,6 +18,7 @@ declare module 'obsidian' {
 		 * Element that wraps the input element.
 		 */
 		containerEl: HTMLElement;
+		addRightDecorator(cb: (containerEl: HTMLElement) => unknown): this;
 	}
 
 	interface ValueComponent<T> {

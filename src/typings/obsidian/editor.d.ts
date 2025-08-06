@@ -23,5 +23,6 @@ declare module 'obsidian' {
 			removePrev: boolean,
 			range?: EditorSelection
 		): void;
+		removeHighlights(style: string): void;
 	}
 }

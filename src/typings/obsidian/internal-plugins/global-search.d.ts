@@ -54,7 +54,7 @@ declare module 'obsidian' {
 		pusherEl: HTMLElement;
 		resultDomLookup: Map<TFile, GlobalSearchResultTreeItem>;
 		vChildren: VirtualChildren<this, GlobalSearchResultTreeItem>;
-		addResult(file: TFile | null, result: GlobalSearchResult, content: string, showTitle?: boolean): void;
+		addResult(file: TFile | null, result: GlobalSearchResult, content: string, showTitle?: boolean): GlobalSearchResultTreeItem | void;
 	}
 
 	/**

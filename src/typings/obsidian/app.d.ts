@@ -10,6 +10,7 @@ declare module 'obsidian' {
 		internalPlugins: InternalPluginManager;
 		metadataTypeManager: MetadataTypeManager;
 		mobileNavbar: MobileNavbar | null;
+		mobileTabSwitcher: MobileTabSwitcher | null;
 		plugins: PluginManager;
 		setting: AppSetting;
 		getObsidianUrl(file: TFile): string;

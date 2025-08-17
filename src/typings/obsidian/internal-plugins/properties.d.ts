@@ -5,6 +5,8 @@ declare module 'obsidian' {
 	 * @typeonly
 	 */
 	class AllPropertiesView extends ItemView {
+		getViewType(): string;
+		getDisplayText(): string;
 		doms: Record<string, PropertyTreeItem>;
 		tree: PropertyVirtualTree;
 	}
@@ -13,6 +15,7 @@ declare module 'obsidian' {
 	 * @typeonly
 	 */
 	class FilePropertiesView extends EditableFileView {
+		getViewType(): string;
 		metadataEditor: MetadataEditor;
 	}
 

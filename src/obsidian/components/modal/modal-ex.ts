@@ -1,4 +1,4 @@
-import type { App } from 'obsidian';
+import type { App, Setting } from 'obsidian';
 import { EventTargetModal } from './event-target-modal';
 import { ButtonExComponent } from '../controls/button-ex';
 import { SettingEx } from '../setting/setting-ex';
@@ -80,8 +80,8 @@ export class ModalEx extends EventTargetModal {
 		return setting;
 	}
 
-	public addSortableList(cb: (list: SortableList) => unknown): SortableList {
-		let sortableList = new SortableList(this.contentEl);
+	public addSortableList<T extends Setting>(cb: (list: SortableList<T>) => unknown): SortableList<T> {
+		let sortableList = new SortableList<T>(this.contentEl);
 		cb(sortableList);
 		return sortableList;
 	}

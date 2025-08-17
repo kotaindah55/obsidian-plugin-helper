@@ -1,4 +1,4 @@
-import { PluginSettingTab } from 'obsidian';
+import { PluginSettingTab, Setting } from 'obsidian';
 import { SettingEx } from './setting-ex';
 import { SortableList } from '../sortable-list';
 
@@ -24,8 +24,8 @@ export abstract class SettingTabEx extends PluginSettingTab {
 		return setting;
 	}
 
-	public addSortableList(cb: (list: SortableList) => unknown): SortableList {
-		let sortableList = new SortableList(this.containerEl);
+	public addSortableList<T extends Setting>(cb: (list: SortableList<T>) => unknown): SortableList<T> {
+		let sortableList = new SortableList<T>(this.containerEl);
 		cb(sortableList);
 		return sortableList;
 	}

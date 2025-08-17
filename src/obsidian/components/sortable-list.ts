@@ -2,8 +2,8 @@ import { BaseComponent, ExtraButtonComponent, Setting } from 'obsidian';
 
 interface Coords { x: number; y: number }
 
-interface SortableListState {
-	dragged: Setting;
+interface SortableListState<T extends Setting> {
+	dragged: T;
 	index: number;
 	oldIndex: number;
 }
@@ -11,20 +11,20 @@ interface SortableListState {
 /**
  * Container of draggable and sortable setting list.
  */
-export class SortableList extends BaseComponent {
+export class SortableList<T extends Setting> extends BaseComponent {
 	public containerEl: HTMLElement;
 	public listEl: HTMLElement;
-	public readonly settings: Setting[];
-	public readonly handles: Map<Setting, ExtraButtonComponent>;
+	public readonly settings: T[];
+	public readonly handles: Map<T, ExtraButtonComponent>;
 
 	private aborter: AbortController;
 	private ghostEl: HTMLElement | null;
-	private state: SortableListState | null;
+	private state: SortableListState<T> | null;
 	
-	private addCallback?: (setting: Setting) => unknown;
-	private removeCallback?: (setting: Setting) => unknown;
-	private moveCallback?: (setting: Setting, newIndex: number, oldIndex: number) => unknown;
-	private endCallback?: (setting: Setting, newIndex: number, oldIndex: number) => unknown;
+	private addCallback?: (setting: T) => unknown;
+	private removeCallback?: (setting: T) => unknown;
+	private moveCallback?: (setting: T, newIndex: number, oldIndex: number) => unknown;
+	private endCallback?: (setting: T, newIndex: number, oldIndex: number) => unknown;
 
 	private get bodyEl(): HTMLElement {
 		return this.listEl.doc.body;
@@ -49,22 +49,19 @@ export class SortableList extends BaseComponent {
 	}
 
 	/**
-	 * Add a {@link Setting} component to the sortable list.
-	 * 
-	 * @param constructor {@link Setting} class or its derivatives.
-	 * @param args {@link constructor | Constructor} arguments.
+	 * Add a {@link T | Setting} component to the sortable list.
 	 */
-	public addSetting<T extends Setting, C extends new (...args: unknown[]) => T>(
-		constructor: C,
-		args: ConstructorParameters<C>,
-		callback?: (setting: T, list: this) => unknown
-	): this {
-		let handle: ExtraButtonComponent | undefined,
-			setting = new constructor(...args).addExtraButton(btn => btn
-				.setIcon('lucide-menu')
-				.setTooltip('Drag to rearrange')
-				.then(btn => handle = btn)
-			);
+	public addSetting(setting: T, callback?: (setting: T, list: this) => unknown): this {
+		let handle: ExtraButtonComponent | undefined;
+
+		// Append the setting to the listEl
+		this.listEl.append(setting.settingEl);
+		// Add drag handle
+		setting.addExtraButton(btn => btn
+			.setIcon('lucide-menu')
+			.setTooltip('Drag to rearrange')
+			.then(btn => handle = btn)
+		);
 
 		let handleEl = handle?.extraSettingsEl;
 
@@ -112,7 +109,7 @@ export class SortableList extends BaseComponent {
 	/**
 	 * Remove the given {@link setting} from the list if any.
 	 */
-	public removeSetting(setting: Setting): this {
+	public removeSetting(setting: T): this {
 		if (!this.settings.contains(setting)) return this;
 
 		let handle = this.handles.get(setting);
@@ -134,9 +131,34 @@ export class SortableList extends BaseComponent {
 	}
 
 	/**
+	 * Move the {@link setting} to the specified index.
+	 * 
+	 * @param triggerOnMove If set to true, it will call `moveHandler`.
+	 * Default to false.
+	 */
+	public moveSetting(setting: T, newIdx: number, triggerOnMove: boolean = false): this {
+		let oldIdx = this.settings.indexOf(setting);
+		if (oldIdx < 0) return this;
+
+		newIdx = Math.clamp(newIdx, 0, this.settings.length - 1);
+		if (oldIdx === newIdx) return this;
+
+		setting.settingEl.detach();
+		let refNode = this.listEl.children[newIdx] ?? null;
+		this.listEl.insertBefore(setting.settingEl, refNode);
+
+		this.settings.remove(setting);
+		this.settings.splice(newIdx, 0, setting);
+
+		if (triggerOnMove) this.moveCallback?.(setting, newIdx, oldIdx);
+
+		return this;
+	}
+
+	/**
 	 * Register callback called after adding a setting.
 	 */
-	public onAdd(callback: (setting: Setting) => unknown): this {
+	public onAdd(callback: (setting: T) => unknown): this {
 		this.addCallback = callback;
 		return this;
 	}
@@ -144,7 +166,7 @@ export class SortableList extends BaseComponent {
 	/**
 	 * Register callback called after removing a setting.
 	 */
-	public onRemove(callback: (setting: Setting) => unknown): this {
+	public onRemove(callback: (setting: T) => unknown): this {
 		this.removeCallback = callback;
 		return this;
 	}
@@ -152,7 +174,7 @@ export class SortableList extends BaseComponent {
 	/**
 	 * Register callback called after moving a setting by dragging.
 	 */
-	public onMove(callback: (setting: Setting, newIndex: number, oldIndex: number) => unknown): this {
+	public onMove(callback: (setting: T, newIndex: number, oldIndex: number) => unknown): this {
 		this.moveCallback = callback;
 		return this;
 	}
@@ -160,7 +182,7 @@ export class SortableList extends BaseComponent {
 	/**
 	 * Register callback called after end of dragging.
 	 */
-	public onEnd(callback: (setting: Setting, newIndex: number, oldIndex: number) => unknown): this {
+	public onEnd(callback: (setting: T, newIndex: number, oldIndex: number) => unknown): this {
 		this.endCallback = callback;
 		return this;
 	}
@@ -221,7 +243,7 @@ export class SortableList extends BaseComponent {
 	/**
 	 * Executed when starts dragging.
 	 */
-	private handleDragStart(coords: Coords, setting: Setting): void {
+	private handleDragStart(coords: Coords, setting: T): void {
 		if (this.disabled) return;
 
 		let { settingEl } = setting;
@@ -268,7 +290,7 @@ export class SortableList extends BaseComponent {
 	 * Executed when moving the dragged {@link setting}, and run the
 	 * {@link moveCallback} callback.
 	 */
-	private handleDragMove(coords: Coords, setting: Setting): void {
+	private handleDragMove(coords: Coords, setting: T): void {
 		if (!this.state) {
 			this.state = {
 				dragged: setting,
@@ -317,7 +339,7 @@ export class SortableList extends BaseComponent {
 	/**
 	 * Executed when finishing, detaching ghost element from the DOM.
 	 */
-	private handleDragEnd(setting: Setting): void {
+	private handleDragEnd(setting: T): void {
 		let newIndex = this.state?.oldIndex ?? this.settings.indexOf(setting),
 			oldIndex = this.state?.index ?? newIndex;
 

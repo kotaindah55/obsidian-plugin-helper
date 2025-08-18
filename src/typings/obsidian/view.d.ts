@@ -29,7 +29,7 @@ declare module 'obsidian' {
 	}
 
 	interface ViewState {
-		icon: string;
+		icon?: string;
 	}
 
 	interface ViewTypeMap {
